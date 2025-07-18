@@ -1,0 +1,37 @@
+name: ✅ Task
+description: 해야 할 작업 또는 구현 과제를 등록할 때 사용하세요
+title: "[TASK] "
+labels: ["task"]
+body:
+  - type: input
+    id: summary
+    attributes:
+      label: 작업 요약
+      placeholder: ex. 비밀번호 찾기 API 구현
+    validations:
+      required: true
+
+  - type: textarea
+    id: details
+    attributes:
+      label: 작업 내용
+      description: 어떤 작업을 해야 하는지 구체적으로 설명해주세요
+      placeholder: ex. POST /api/users/send-code API 작성, 인증번호 DB 저장 등
+    validations:
+      required: true
+
+  - type: dropdown
+    id: priority
+    attributes:
+      label: 우선순위
+      options:
+        - 🔴 높음
+        - 🟡 중간
+        - 🟢 낮음
+      default: 1
+
+  - type: input
+    id: due
+    attributes:
+      label: 마감 기한
+      placeholder: ex. 2025-07-22

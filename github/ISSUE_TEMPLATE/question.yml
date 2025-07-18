@@ -1,0 +1,28 @@
+name: ❓ Question / Help
+description: 궁금한 점이나 도움이 필요한 내용을 작성해주세요
+title: "[QUESTION] "
+labels: ["question"]
+body:
+  - type: input
+    id: topic
+    attributes:
+      label: 질문 주제
+      placeholder: ex. 로그인 로직에서 useEffect 사용 이유
+    validations:
+      required: true
+
+  - type: textarea
+    id: context
+    attributes:
+      label: 배경 설명
+      description: 어떤 상황에서 궁금증이 생겼는지 설명해주세요
+      placeholder: ex. 로그인 API 호출 후 상태 업데이트 타이밍이 궁금합니다.
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: 원하는 답변
+      description: 어떤 부분이 명확해지길 원하는지 작성해주세요
+      placeholder: ex. 어떤 hook을 써야 상태 업데이트가 자연스럽게 동작할지 알고 싶어요
