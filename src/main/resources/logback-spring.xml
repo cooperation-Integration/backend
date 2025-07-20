@@ -48,7 +48,7 @@
             <!-- 롤링시 파일명 ex : logs/application.2025-07-19_1.log.gz -->
             <fileNamePattern>${LOG_PATH}/${APP_LOG_FILE_NAME}.%d{yyyy-MM-dd}_%i.log.gz</fileNamePattern>
             <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
-                <!-- 10MB 넘어가면 롤링-->
+                <!-- 10MB 넘어가ㄴ면 롤링--> <!-- 임시로 1메가로 바꿔둠 -->
                 <maxFileSize>10MB</maxFileSize>
             </timeBasedFileNamingAndTriggeringPolicy>
             <!-- 최대 10일까지 보관 -->
@@ -82,7 +82,7 @@
     </appender>
 
     <!-- 루트 로거 설정 기본으론 INFO // ERROR는 위의 설정 안 맞으면 무시하도록 설정 -->
-    <root level="${LOG_LEVEL}">
+    <root level="DEBUG">
         <appender-ref ref="CONSOLE"/>
         <appender-ref ref="FILE"/>
         <appender-ref ref="ERROR"/>
