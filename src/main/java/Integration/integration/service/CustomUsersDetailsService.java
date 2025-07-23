@@ -2,19 +2,17 @@ package Integration.integration.service;
 
 import Integration.integration.entity.Users;
 import Integration.integration.repository.UsersRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 @Service
+@RequiredArgsConstructor
 public class CustomUsersDetailsService implements UserDetailsService {
 
     private final UsersRepository usersRepository;
-
-    public CustomUsersDetailsService(UsersRepository usersRepository) {
-        this.usersRepository = usersRepository;
-    }
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
