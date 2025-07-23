@@ -3,12 +3,10 @@ package Integration.integration.controller;
 import Integration.integration.dto.request.LoginRequest;
 import Integration.integration.dto.request.RegisterRequest;
 import Integration.integration.dto.response.ApiResponse;
-import Integration.integration.jwt.JwtTokenProvider;
 import Integration.integration.service.UsersService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
