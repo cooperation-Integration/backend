@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 1분마다 변경사항 스캔-->
+<configuration debug="false" scan="true" scanPeriod="60 seconds">
+
+    <!-- 색상 지원 -->
+    <conversionRule conversionWord="clr" converterClass="org.springframework.boot.logging.logback.ColorConverter"/>
+
+    <!-- 개발 환경 전용 설정 가능 -->
+    <springProfile name="dev">
+        <property resource="application-dev.properties"/>
+    </springProfile>
+
+    <!-- Spring 환경 변수 가져오기 -->
+    <springProperty scope="context" name="LOG_LEVEL" source="logging.level.root" defaultValue="INFO"/>
+    <springProperty scope="context" name="LOG_PATH" source="logging.file.path" defaultValue="logs"/>
+
+    <!-- 로그 파일명 변수 정의 -->
+    <property name="APP_LOG_FILE_NAME" value="application"/>
+    <property name="ERROR_LOG_FILE_NAME" value="error"/>
+
+    <!-- 로그 패턴 -->
+    <property name="LOG_PATTERN" value="[%d{yyyy-MM-dd HH:mm:ss}:%-3relative] %clr(%-5level) %clr(${PID:-}){magenta} %clr(---){faint} %clr([%15.15thread]){faint} %clr(%-40.40logger{36}){cyan} %clr(:){faint} %msg%n"/>
+
+    <!-- 콘솔 로그 -->
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>${LOG_PATTERN}</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <!-- 콘솔로그 = INFO, WARN, ERROR 표시 -->
+            <level>INFO</level>
+        </filter>
+    </appender>
+
+    <!-- 일반 로그 파일 -->
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_PATH}/${APP_LOG_FILE_NAME}.log</file>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>${LOG_PATTERN}</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <!-- 일반 로그파일 (application) = INFO, WARN, ERROR 표시 -->
+            <level>INFO</level>
+        </filter>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- 롤링시 파일명 ex : logs/application.2025-07-19_1.log.gz -->
+            <fileNamePattern>${LOG_PATH}/${APP_LOG_FILE_NAME}.%d{yyyy-MM-dd}_%i.log.gz</fileNamePattern>
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <!-- 10MB 넘어가ㄴ면 롤링--> <!-- 임시로 1메가로 바꿔둠 -->
+                <maxFileSize>10MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+            <!-- 최대 10일까지 보관 -->
+            <maxHistory>10</maxHistory>
+        </rollingPolicy>
+    </appender>
+
+    <!-- 에러 로그 파일 -->
+    <appender name="ERROR" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_PATH}/${ERROR_LOG_FILE_NAME}.log</file>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>${LOG_PATTERN}</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <!-- 에러 로그파일 = ERROR 표시 -->
+            <level>ERROR</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- 롤링시 파일명 ex : logs/application.2025-07-19_1.log.gz -->
+            <fileNamePattern>${LOG_PATH}/${ERROR_LOG_FILE_NAME}.%d{yyyy-MM-dd}_%i.log.gz</fileNamePattern>
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <!-- 10MB 넘어가면 롤링-->
+                <maxFileSize>10MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+            <!-- 최대 10일까지 보관 -->
+            <maxHistory>10</maxHistory>
+        </rollingPolicy>
+    </appender>
+
+    <!-- 루트 로거 설정 기본으론 INFO // ERROR는 위의 설정 안 맞으면 무시하도록 설정 -->
+    <root level="DEBUG">
+        <appender-ref ref="CONSOLE"/>
+        <appender-ref ref="FILE"/>
+        <appender-ref ref="ERROR"/>
+    </root>
+
+    <!-- 예시 특정 패키지 로거 설정 방법 (예: 트레이스 전용 로깅) -->
+<!--    <logger name="Integration.integration.service" level="TRACE" additivity="false">-->
+<!--        <appender-ref ref="FILE"/>-->
+<!--        <appender-ref ref="ERROR"/>-->
+<!--    </logger>-->
+
+</configuration>
