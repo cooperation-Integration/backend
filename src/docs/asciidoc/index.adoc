@@ -1,0 +1,6 @@
+= API 문서
+:snippets: build/generated-snippets
+
+== Hello API
+
+include::{snippets}/hello/http-response.adoc[]
