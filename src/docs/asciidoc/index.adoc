@@ -1,6 +1,32 @@
-= API 문서
-:snippets: build/generated-snippets
+= API 명세서
+:toc: left
+:doctype: book
+:source-highlighter: highlightjs
 
-== Hello API
+== 회원가입
 
-include::{snippets}/hello/http-response.adoc[]
+include::{snippets}/users-register/http-request.adoc[]
+include::{snippets}/users-register/request-fields.adoc[]
+include::{snippets}/users-register/http-response.adoc[]
+include::{snippets}/users-register/response-fields.adoc[]
+
+== 로그인
+
+include::{snippets}/users-login/http-request.adoc[]
+include::{snippets}/users-login/request-fields.adoc[]
+include::{snippets}/users-login/http-response.adoc[]
+include::{snippets}/users-login/response-fields.adoc[]
+
+== 이메일 찾기
+
+include::{snippets}/users-find-email/http-request.adoc[]
+include::{snippets}/users-find-email/query-parameters.adoc[]
+include::{snippets}/users-find-email/http-response.adoc[]
+include::{snippets}/users-find-email/response-fields.adoc[]
+
+== 인증코드 전송
+
+include::{snippets}/users-send-code/http-request.adoc[]
+include::{snippets}/users-send-code/request-fields.adoc[]
+include::{snippets}/users-send-code/http-response.adoc[]
+include::{snippets}/users-send-code/response-fields.adoc[]
