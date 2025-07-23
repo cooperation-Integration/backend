@@ -5,6 +5,7 @@ import Integration.integration.entity.UserOauths;
 import Integration.integration.entity.Users;
 import Integration.integration.repository.UserOauthRepository;
 import Integration.integration.repository.UsersRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -17,13 +18,18 @@ public class OAuthService {
     private final UsersRepository usersRepository;
     private final UserOauthRepository userOauthRepository;
 
+    @Transactional
     public Users handleOAuthLogin(OAuthUserInfo oAuthInfo) {
         // 1. 기존 user_oauths 확인
         Optional<UserOauths> existing = userOauthRepository.findByProviderAndProviderId(
                 oAuthInfo.getProvider(), oAuthInfo.getProviderId());
 
         if (existing.isPresent()) {
-            return existing.get().getUser(); // 기존 회원 로그인 처리
+            Users user = existing.get().getUser();
+            // 💡 LazyInitializationException 방지용 강제 초기화
+            user.getEmail();
+            user.getNickname();
+            return user;
         }
 
         // 2. users 테이블에 새 유저 생성
