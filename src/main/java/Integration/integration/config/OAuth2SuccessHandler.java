@@ -1,33 +1,35 @@
-package Integration.integration.controller;
+package Integration.integration.config;
 
 import Integration.integration.dto.OAuthUserInfo;
 import Integration.integration.entity.Provider;
 import Integration.integration.entity.Users;
 import Integration.integration.jwt.JwtTokenProvider;
 import Integration.integration.service.OAuthService;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.core.user.OAuth2User;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.stereotype.Component;
 
+import java.io.IOException;
 import java.util.Map;
 
-@RestController
+@Component
 @RequiredArgsConstructor
-public class LoginSuccessController {
+public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
 
-    private final OAuthService oauthService;
     private final JwtTokenProvider jwtTokenProvider;
+    private final OAuthService oauthService;
 
-    @GetMapping("/loginSuccess")
-    public ResponseEntity<?> loginSuccess(@AuthenticationPrincipal OAuth2User oAuth2User) {
-        if (oAuth2User == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("OAuth2User가 없습니다.");
-        }
+    @Override
+    public void onAuthenticationSuccess(HttpServletRequest request,
+                                        HttpServletResponse response,
+                                        Authentication authentication) throws IOException {
 
+        OAuth2User oAuth2User = (OAuth2User) authentication.getPrincipal();
         Map<String, Object> attributes = oAuth2User.getAttributes();
 
         String providerId, email, name, picture;
@@ -51,18 +53,20 @@ public class LoginSuccessController {
             picture = (String) attributes.get("picture");
         }
 
+        // DB 저장 또는 기존 유저 조회
         OAuthUserInfo userInfo = new OAuthUserInfo(provider, providerId, email, name, picture);
         Users user = oauthService.handleOAuthLogin(userInfo);
 
-        // ✅ JWT 생성
+        // JWT 발급
         String token = jwtTokenProvider.createToken(user.getEmail(), user.getRole());
 
-        // ✅ 토큰 클라이언트로 응답
-        return ResponseEntity.ok(Map.of(
+        // JSON 응답
+        response.setContentType("application/json;charset=UTF-8");
+        new ObjectMapper().writeValue(response.getWriter(), Map.of(
                 "accessToken", token,
                 "email", user.getEmail(),
                 "nickname", user.getNickname()
         ));
     }
-
 }
+
